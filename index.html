@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bahasa Indonesia SMA — Portal Belajar</title>
+    <meta name="description" content="Portal belajar Bahasa Indonesia SMA gratis. Materi lengkap, kuis interaktif pilihan ganda A-E, ringkasan, dan tips ujian.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Cormorant Garamond', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{font-family:'Inter',sans-serif;background:#0c0a09;color:#e7e5e4}
+        @keyframes orbit-moon{0%{transform:rotate(0deg) translateX(180px) rotate(0deg) scale(.8);z-index:0}49%{z-index:0}50%{transform:rotate(180deg) translateX(180px) rotate(-180deg) scale(1);z-index:20}99%{z-index:20}100%{transform:rotate(360deg) translateX(180px) rotate(-360deg) scale(.8);z-index:0}}
+        .orbit-moon{animation:orbit-moon 60s linear infinite}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+        .float-anim{animation:float 6s ease-in-out infinite}
+        @keyframes pulse-glow{0%,100%{box-shadow:0 0 20px rgba(253,230,138,.15)}50%{box-shadow:0 0 40px rgba(253,230,138,.3)}}
+        .pulse-glow{animation:pulse-glow 3s ease-in-out infinite}
+        @keyframes fade-in-up{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in-up{animation:fade-in-up .8s ease-out forwards}
+        .fd1{animation-delay:.1s;opacity:0}.fd2{animation-delay:.2s;opacity:0}.fd3{animation-delay:.3s;opacity:0}
+        .hero-bg{background:radial-gradient(ellipse at 50% 0%,rgba(30,27,75,.4) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(253,230,138,.05) 0%,transparent 40%),#0c0a09}
+        .stars{background-image:radial-gradient(2px 2px at 20px 30px,#fde68a,transparent),radial-gradient(2px 2px at 40px 70px,rgba(255,255,255,.8),transparent),radial-gradient(1px 1px at 90px 40px,#fff,transparent),radial-gradient(1px 1px at 130px 80px,rgba(255,255,255,.6),transparent),radial-gradient(2px 2px at 160px 30px,#fde68a,transparent),radial-gradient(1px 1px at 200px 60px,#fff,transparent),radial-gradient(1px 1px at 60px 100px,rgba(255,255,255,.5),transparent),radial-gradient(2px 2px at 250px 20px,rgba(253,230,138,.7),transparent);background-size:300px 120px;opacity:.2}
+        .card-hover{transition:all .3s ease}.card-hover:hover{transform:translateY(-4px);border-color:rgba(253,230,138,.2)}
+        .materi-card{transition:all .4s ease}.materi-card:hover{transform:translateY(-8px)}.materi-card:hover .materi-icon{background:rgba(253,230,138,.15);color:#fde68a}.materi-card:hover .materi-title{color:#fde68a}
+        .quiz-option{transition:all .3s ease;cursor:pointer}.quiz-option:hover{border-color:rgba(253,230,138,.3);background:rgba(28,25,23,.8)}
+        .quiz-option.correct{border-color:#22c55e!important;background:rgba(34,197,94,.1)!important}
+        .quiz-option.wrong{border-color:#ef4444!important;background:rgba(239,68,68,.1)!important}
+        .quiz-option.selected{border-color:#fde68a!important;background:rgba(253,230,138,.08)!important}
+        .quiz-option.correct .ol{background:#22c55e!important;color:#fff!important}
+        .quiz-option.wrong .ol{background:#ef4444!important;color:#fff!important}
+        .quiz-option.selected .ol{background:#fde68a!important;color:#0c0a09!important}
+        .nav-link{position:relative}.nav-link::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:#fde68a;transition:width .3s ease}.nav-link:hover::after{width:100%}
+        .tab-btn.active{color:#fde68a;border-color:#fde68a}.tab-content{display:none}.tab-content.active{display:block}
+        .toast{position:fixed;bottom:2rem;right:2rem;z-index:100;transform:translateY(100px);opacity:0;transition:all .4s ease}.toast.show{transform:translateY(0);opacity:1}
+        .modal-overlay{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .3s ease}.modal-overlay.show{opacity:1;pointer-events:auto}
+        .modal-content{transform:scale(.95) translateY(20px);transition:transform .3s ease}.modal-overlay.show .modal-content{transform:scale(1) translateY(0)}
+        ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#0c0a09}::-webkit-scrollbar-thumb{background:#292524;border-radius:3px}::-webkit-scrollbar-thumb:hover{background:#44403c}
+        .progress-ring{transform:rotate(-90deg)}
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Nav -->
+    <nav class="fixed top-0 left-0 right-0 z-50" style="background:rgba(12,10,9,.85);backdrop-filter:blur(24px)">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#fde68a,#fcd34d)">
+                    <span class="text-stone-900 font-serif font-semibold text-lg">B</span>
+                </div>
+                <span class="font-serif text-xl font-medium text-stone-200 tracking-tight">BIndo<span class="text-amber-200">SMA</span></span>
+            </a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#materi" class="nav-link text-stone-400 hover:text-stone-200 transition-colors text-sm font-medium">Materi</a>
+                <a href="#kuis" class="nav-link text-stone-400 hover:text-stone-200 transition-colors text-sm font-medium">Kuis</a>
+                <a href="#ringkasan" class="nav-link text-stone-400 hover:text-stone-200 transition-colors text-sm font-medium">Ringkasan</a>
+                <a href="#tips" class="nav-link text-stone-400 hover:text-stone-200 transition-colors text-sm font-medium">Tips</a>
+                <a href="#faq" class="nav-link text-stone-400 hover:text-stone-200 transition-colors text-sm font-medium">FAQ</a>
+            </div>
+            <button onclick="document.getElementById('mm').classList.toggle('hidden')" class="md:hidden text-stone-400 hover:text-stone-200 transition-colors">
+                <span class="iconify" data-icon="mdi:menu" data-width="24"></span>
+            </button>
+        </div>
+        <div id="mm" class="md:hidden hidden px-6 pb-4 border-t" style="border-color:rgba(41,37,36,.5)">
+            <div class="flex flex-col gap-3 pt-4">
+                <a href="#materi" onclick="document.getElementById('mm').classList.add('hidden')" class="text-stone-400 hover:text-stone-200 transition-colors text-sm font-medium py-2">Materi</a>
+                <a href="#kuis" onclick="document.getElementById('mm').classList.add('hidden')" class="text-stone-400 hover:text-stone-200 transition-colors text-sm font-medium py-2">Kuis</a>
+                <a href="#ringkasan" onclick="document.getElementById('mm').classList.add('hidden')" class="text-stone-400 hover:text-stone-200 transition-colors text-sm font-medium py-2">Ringkasan</a>
+                <a href="#tips" onclick="document.getElementById('mm').classList.add('hidden')" class="text-stone-400 hover:text-stone-200 transition-colors text-sm font-medium py-2">Tips</a>
+                <a href="#faq" onclick="document.getElementById('mm').classList.add('hidden')" class="text-stone-400 hover:text-stone-200 transition-colors text-sm font-medium py-2">FAQ</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero-bg relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <div class="stars absolute inset-0"></div>
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="relative" style="width:360px;height:360px">
+                <div class="absolute inset-0 rounded-full border" style="border-color:rgba(253,230,138,.08)"></div>
+                <div class="absolute inset-4 rounded-full border" style="border-color:rgba(253,230,138,.04)"></div>
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full pulse-glow" style="background:radial-gradient(circle at 35% 35%,#fef9c3,#fde68a,#f59e0b);box-shadow:0 0 60px rgba(253,230,138,.3)"></div>
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 orbit-moon">
+                    <div class="w-8 h-8 rounded-full" style="background:radial-gradient(circle at 30% 30%,#e7e5e4,#a8a29e);box-shadow:inset -4px -2px 0 rgba(0,0,0,.2)"></div>
+                </div>
+            </div>
+        </div>
+        <div class="relative z-10 text-center max-w-4xl mx-auto px-6">
+            <div class="fade-in-up mb-6">
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest" style="background:rgba(41,37,36,.5);color:#a8a29e;border:1px solid rgba(41,37,36,.5);backdrop-filter:blur(12px)">
+                    <span class="iconify" data-icon="mdi:book-open-page-variant" data-width="14"></span>
+                    Kurikulum Merdeka
+                </span>
+            </div>
+            <h1 class="font-serif font-light text-5xl md:text-7xl lg:text-8xl tracking-tight text-stone-200 leading-none mb-6 fade-in-up fd1">
+                Bahasa Indonesia
+                <span class="block" style="color:#fde68a">SMA</span>
+            </h1>
+            <p class="text-stone-400 font-light text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed fade-in-up fd2">
+                Kuasai seluruh materi Bahasa Indonesia SMA — dari teks prosedur hingga analisis cerpen. Belajar interaktif dengan kuis pilihan ganda A–E dan ringkasan lengkap.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 fade-in-up fd3">
+                <a href="#materi" class="px-10 py-4 rounded-full font-medium text-sm text-stone-900 transition-all duration-300 hover:shadow-lg" style="background:#fde68a;box-shadow:0 0 20px rgba(253,230,138,.3)" onmouseover="this.style.background='#fef9c3'" onmouseout="this.style.background='#fde68a'">Mulai Belajar</a>
+                <a href="#kuis" class="px-10 py-4 rounded-full font-medium text-sm text-stone-200 transition-all duration-300" style="background:rgba(41,37,36,.8);border:1px solid rgba(41,37,36,.5)" onmouseover="this.style.background='#292524'" onmouseout="this.style.background='rgba(41,37,36,.8)'">Coba Kuis</a>
+            </div>
+        </div>
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 float-anim">
+            <span class="iconify text-stone-500" data-icon="mdi:chevron-double-down" data-width="24"></span>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="py-16 border-y" style="border-color:rgba(41,37,36,.3)">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center"><div class="font-serif text-4xl font-light" style="color:#fde68a">18</div><div class="text-stone-500 text-sm mt-1">Materi Lengkap</div></div>
+                <div class="text-center"><div class="font-serif text-4xl font-light" style="color:#fde68a">25</div><div class="text-stone-500 text-sm mt-1">Soal Kuis</div></div>
+                <div class="text-center"><div class="font-serif text-4xl font-light" style="color:#fde68a">3</div><div class="text-stone-500 text-sm mt-1">Tingkat Kelas</div></div>
+                <div class="text-center"><div class="font-serif text-4xl font-light" style="color:#fde68a">100%</div><div class="text-stone-500 text-sm mt-1">Gratis</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Materi -->
+    <section id="materi" class="py-24 md:py-32">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-6" style="background:rgba(41,37,36,.5);color:#a8a29e;border:1px solid rgba(41,37,36,.5)">Materi Pelajaran</span>
+                <h2 class="font-serif text-4xl md:text-5xl font-light tracking-tight text-stone-200 mb-4">Materi Lengkap</h2>
+                <p class="text-stone-400 font-light max-w-xl mx-auto">Semua topik penting Bahasa Indonesia SMA dalam satu tempat.</p>
+            </div>
+            <div class="flex justify-center gap-2 mb-12">
+                <button onclick="swKelas('x',this)" class="tab-btn active px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 border" style="border-color:transparent">Kelas X</button>
+                <button onclick="swKelas('xi',this)" class="tab-btn px-6 py-2.5 rounded-full text-sm font-medium text-stone-400 transition-all duration-300 border" style="border-color:rgba(41,37,36,.5)">Kelas XI</button>
+                <button onclick="swKelas('xii',this)" class="tab-btn px-6 py-2.5 rounded-full text-sm font-medium text-stone-400 transition-all duration-300 border" style="border-color:rgba(41,37,36,.5)">Kelas XII</button>
+            </div>
+            <div id="kelas-x" class="tab-content active"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="grid-x"></div></div>
+            <div id="kelas-xi" class="tab-content"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="grid-xi"></div></div>
+            <div id="kelas-xii" class="tab-content"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="grid-xii"></div></div>
+        </div>
+    </section>
+
+    <!-- Kuis -->
+    <section id="kuis" class="py-24 md:py-32" style="background:linear-gradient(to bottom,rgba(28,25,23,.3),transparent)">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-6" style="background:rgba(41,37,36,.5);color:#a8a29e;border:1px solid rgba(41,37,36,.5)">Uji Pemahaman</span>
+                <h2 class="font-serif text-4xl md:text-5xl font-light tracking-tight text-stone-200 mb-4">Kuis Interaktif</h2>
+                <p class="text-stone-400 font-light max-w-xl mx-auto">Uji pemahamanmu dengan soal pilihan ganda A–E yang langsung dinilai otomatis.</p>
+            </div>
+            <div class="max-w-3xl mx-auto">
+                <div class="flex items-center justify-between mb-8 p-6 rounded-2xl" style="background:rgba(28,25,23,.5);border:1px solid rgba(41,37,36,.3)">
+                    <div>
+                        <div class="text-stone-200 font-medium text-lg" id="qTitle">Teks Prosedur</div>
+                        <div class="text-stone-500 text-sm">Soal <span id="qCur">1</span> dari <span id="qTot">5</span></div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <div class="text-xs text-stone-500">Skor</div>
+                            <div class="font-serif text-2xl font-light" style="color:#fde68a" id="qScore">0</div>
+                        </div>
+                        <svg class="progress-ring" width="48" height="48">
+                            <circle cx="24" cy="24" r="20" fill="none" stroke="#292524" stroke-width="3"/>
+                            <circle id="pCircle" cx="24" cy="24" r="20" fill="none" stroke="#fde68a" stroke-width="3" stroke-dasharray="125.6" stroke-dashoffset="125.6" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="w-full h-1 rounded-full mb-8" style="background:#292524">
+                    <div id="pBar" class="h-1 rounded-full transition-all duration-500" style="background:#fde68a;width:20%"></div>
+                </div>
+                <div id="qBody">
+                    <div class="p-8 rounded-3xl mb-6" style="background:linear-gradient(to bottom,rgba(28,25,23,.5),transparent);border:1px solid rgba(41,37,36,.3)">
+                        <p class="text-stone-200 text-lg font-light leading-relaxed" id="qText">Memuat soal...</p>
+                    </div>
+                    <div class="space-y-3" id="qOpts"></div>
+                </div>
+                <div id="qResult" class="hidden text-center p-12 rounded-3xl" style="background:linear-gradient(to bottom,rgba(28,25,23,.5),transparent);border:1px solid rgba(41,37,36,.3)">
+                    <div class="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center" id="rIcon" style="background:rgba(34,197,94,.1)">
+                        <span class="iconify text-green-400" data-icon="mdi:check-circle" data-width="40"></span>
+                    </div>
+                    <h3 class="font-serif text-3xl font-light text-stone-200 mb-2" id="rTitle">Hasil Kuis</h3>
+                    <p class="text-stone-400 font-light mb-6" id="rDesc"></p>
+                    <div class="font-serif text-6xl font-light mb-8" style="color:#fde68a" id="rScore">0/5</div>
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                        <button onclick="restartQ()" class="px-8 py-3 rounded-full font-medium text-sm text-stone-900 transition-all duration-300" style="background:#fde68a">Ulangi Kuis</button>
+                        <button onclick="nextTopic()" class="px-8 py-3 rounded-full font-medium text-sm text-stone-200 transition-all duration-300" style="background:rgba(41,37,36,.8);border:1px solid rgba(41,37,36,.5)">Topik Lain</button>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 justify-center mt-8" id="topicBtns"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ringkasan -->
+    <section id="ringkasan" class="py-24 md:py-32">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-6" style="background:rgba(41,37,36,.5);color:#a8a29e;border:1px solid rgba(41,37,36,.5)">Ringkasan Cepat</span>
+                <h2 class="font-serif text-4xl md:text-5xl font-light tracking-tight text-stone-200 mb-4">Cheat Sheet</h2>
+                <p class="text-stone-400 font-light max-w-xl mx-auto">Ringkasan materi penting untuk dibaca sebelum ujian.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card-hover p-8 rounded-3xl" style="background:linear-gradient(to bottom,rgba(28,25,23,.5),transparent);border:1px solid rgba(41,37,36,.3)">
+                    <div class="flex items-center gap-3 mb-6"><div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(253,230,138,.1)"><span class="iconify" style="color:#fde68a" data-icon="mdi:format-list-checks" data-width="22"></span></div><h3 class="font-serif text-xl font-medium text-stone-200">Struktur Teks Penting</h3></div>
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-xl" style="background:rgba(12,10,9,.5)"><div class="text-amber-200 text-sm font-medium mb-2">Teks Prosedur</div><div class="text-stone-400 text-sm font-light">Tujuan → Material/Alat → Langkah-langkah → Penutup</div></div>
+                        <div class="p-4 rounded-xl" style="background:rgba(12,10,9,.5)"><div class="text-amber-200 text-sm font-medium mb-2">Teks Eksplanasi</div><div class="text-stone-400 text-sm font-light">Pernyataan umum → Deretan penjelas → Interpretasi</div></div>
+                        <div class="p-4 rounded-xl" style="background:rgba(12,10,9,.5)"><div class="text-amber-200 text-sm font-medium mb-2">Teks Persuasi</div><div class="text-stone-400 text-sm font-light">Pengenalan isu → Rangkaian argumen → Ajakan</div></div>
+                        <div class="p-4 rounded-xl" style="background:rgba(12,10,9,.5)"><div class="text-amber-200 text-sm font-medium mb-2">Teks Diskusi</div><div class="text-stone-400 text-sm font-light">Pendahuluan → Pro → Kontra → Kesimpulan</div></div>
+                    </div>
+                </div>
+                <div class="card-hover p-8 rounded-3xl" style="background:linear-gradient(to bottom,rgba(28,25,23,.5),transparent);border:1px solid rgba(41,37,36,.3)">
+                    <div class="flex items-center gap-3 mb-6"><div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(253,230,138,.1)"><span class="iconify" style="color:#fde68a" data-icon="mdi:book-search-outline" data-width="22"></span></div><h3 class="font-serif text-xl font-medium text-stone-200">Unsur Intrinsik Cerpen</h3></div>
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3 p-3 rounded-xl" style="background:rgba(12,10,9,.5)"><span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium text-stone-900 shrink-0 mt-0.5" style="background:#fde68a">1</span><div><div class="text-stone-200 text-sm font-medium">Tema</div><div class="text-stone-500 text-xs font-light">Ide pokok yang mendasari cerita</div></div></div>
+                        <div class="flex items-start gap-3 p-3 rounded-xl" style="background:rgba(12,10,9,.5)"><span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium text-stone-900 shrink-0 mt-0.5" style="background:#fde68a">2</span><div><div class="text-stone-200 text-sm font-medium">Alur</div><div class="text-stone-500 text-xs font-light">Maju, mundur, campuran, atau mengalung</div></div></div>
+                        <div class="flex items-start gap-3 p-3 rounded-xl" style="background:rgba(12,10,9,.5)"><span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium text-stone-900 shrink-0 mt-0.5" style="background:#fde68a">3</span><div><div class="text-stone-200 text-sm font-medium">Tokoh & Penokohan</div><div class="text-stone-500 text-xs font-light">Protagonis, antagonis, tritagonis</div></div></div>
+                        <div class="flex items-start gap-3 p-3 rounded-xl" style="background:rgba(12,10,9,.5)"><span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium text-stone-900 shrink-0 mt-0.5" style="background:#fde68a">4</span><div><div class="text-stone-200 text-sm font-medium">Sudut Pandang</div><div class="text-stone-500 text-xs font-light">Orang pertama, ketiga terbatas, serba tahu</div></div></div>
+                        <div class="flex items-start gap-3 p-3 rounded-xl" style="background:rgba(12,10,9,.5)"><span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium text-stone-900 shrink-0 mt-0.5" style="background:#fde68a">5</span><div><div class="text-stone-200 text-sm font-medium">Latar / Setting</div><div class="text-stone-500 text-xs font-light">Tempat, waktu, dan suasana</div></div></div>
+                        <div class="flex items-start gap-3 p-3 rounded-xl" style="background:rgba(12,10,9,.5)"><span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium text-stone-900 shrink-0 mt-0.5" style="background:#fde68a">6</span><div><div class="text-stone-200 text-sm font-medium">Amanat</div><div class="text-stone-500 text-xs font-light">Pesan yang disampaikan penulis</div></div></div>
+                    </div>
+                </div>
+                <div class="card-hover p-8 rounded-3xl" style="background:linear-gradient(to bottom,rgba(28,25,23,.5),transparent);border:1px solid rgba(41,37,36,.3)">
+                    <div class="flex items-center gap-3 mb-6"><div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(253,230,138,.1)"><span class="iconify" style="color:#fde68a" data-icon="mdi:palette-outline" data-width="22"></span></div><h3 class="font-serif text-xl font-medium text-stone-200">Majas Populer</h3></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="p-3 rounded-xl" style="background:rgba(12,10,9,.5)"><div class="text-amber-200 text-xs font-medium">Metafora</div><div class="text-stone-500 text-xs font-light mt-1">Perbandingan langsung</div></div>
+                        <div class="p-3 rounded-xl" style="background:rgba(12,10,9,.5)"><div class="text-amber-200 text-xs font-medium">Personifikasi</div><div class="text-stone-500 text-xs font-light mt-1">Sifat benda seperti manusia</div></div>
+                        <div class="p-3 rounded-xl" style="background:rgba(12,10,9,.5)"><div class="text-amber-200 text-xs font-medium">Hiperbola</div><div class="text-stone-500 text-xs font-light mt-1">Pengungkapan berlebihan</div></div>
+                        <div class="p-3 rounded-xl" style="background:rgba(12,10,9,.5)"><div class="text-amber-200 text-xs font-medium">Litotes</div><div class="text-stone-500 text-xs font-light mt-1">Menyederhanakan fakta</div></div>
+                        <div class="p-3 rounded-xl" style="background:rgba(12,10,9,.5)"><div class="text-amber-200 text-xs font-medium">Ironi</div><div class="text-stone-500 text-xs font-light mt-1">Bermakna bertolak belakang</div></div>
+                        <div class="p-3 rounded-xl" style="background:rgba(12,10,9,.5)"><div class="text-amber-200 text-xs font-medium">Sinisme</div><div class="text-stone-500 text-xs font-light mt-1">Sindiran pedas</div></div>
+                        <div class="p-3 rounded-xl" style="background:rgba(12,10,9,.5)"><div class="text-amber-200 text-xs font-medium">Sarkasme</div><div class="text-stone-500 text-xs font-light mt-1">Sindiran tajam & kasar</div></div>
+                        <div class="p-3 rounded-xl" style="background:rgba(12,10,9,.5)"><div class="text-amber-200 text-xs font-medium">Alusio</div><div class="text-stone-500 text-xs font-light mt-1">Mengacu pada tokoh/kejadian</div></div>
+                    </div>
+                </div>
+                <div class="card-hover p-8 rounded-3xl" style="background:linear-gradient(to bottom,rgba(28,25,23,.5),transparent);border:1px solid rgba(41,37,36,.3)">
+                    <div class="flex items-center gap-3 mb-6"><div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(253,230,138,.1)"><span class="iconify" style="color:#fde68a" data-icon="mdi:check-decagram-outline" data-width="22"></span></div><h3 class="font-serif text-xl font-medium text-stone-200">Syarat Kalimat Efektif</h3></div>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3"><span class="iconify shrink-0 mt-0.5" style="color:#22c55e" data-icon="mdi:check-circle" data-width="18"></span><div><div class="text-stone-200 text-sm font-medium">Kelogisan</div><div class="text-stone-500 text-xs font-light">Pikiran yang nyambung dan masuk akal</div></div></div>
+                        <div class="flex items-start gap-3"><span class="iconify shrink-0 mt-0.5" style="color:#22c55e" data-icon="mdi:check-circle" data-width="18"></span><div><div class="text-stone-200 text-sm font-medium">Ketegasan</div><div class="text-stone-500 text-xs font-light">Makna tidak rancu atau menimbulkan penafsiran ganda</div></div></div>
+                        <div class="flex items-start gap-3"><span class="iconify shrink-0 mt-0.5" style="color:#22c55e" data-icon="mdi:check-circle" data-width="18"></span><div><div class="text-stone-200 text-sm font-medium">Kehematan</div><div class="text-stone-500 text-xs font-light">Tidak ada kata yang berlebihan / redundan</div></div></div>
+                        <div class="flex items-start gap-3"><span class="iconify shrink-0 mt-0.5" style="color:#22c55e" data-icon="mdi:check-circle" data-width="18"></span><div><div class="text-stone-200 text-sm font-medium">Keparalelan</div><div class="text-stone-500 text-xs font-light">Bentuk yang sejajar antarunsur</div></div></div>
+                        <div class="flex items-start gap-3"><span class="iconify shrink-0 mt-0.5" style="color:#22c55e" data-icon="mdi:check-circle" data-width="18"></span><div><div class="text-stone-200 text-sm font-medium">Ketepatan Ejaan</div><div class="text-stone-500 text-xs font-light">Sesuai PUEBI yang berlaku</div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tips -->
+    <section id="tips" class="py-24 md:py-32" style="background:linear-gradient(to bottom,rgba(28,25,23,.3),transparent)">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-6" style="background:rgba(41,37,36,.5);color:#a8a29e;border:1px solid rgba(41,37,36,.5)">Strategi Belajar</span>
+                <h2 class="font-serif text-4xl md:text-5xl font-light tracking-tight text-stone-200 mb-4">Tips & Trik</h2>
+                <p class="text-stone-400 font-light max-w-xl mx-auto">Strategi jitu menghadapi ujian Bahasa Indonesia SMA.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card-hover p-8 rounded-3xl text-center" style="background:linear-gradient(to bottom,rgba(28,25,23,.5),transparent);border:1px solid rgba(41,37,36,.3)">
+                    <div class="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center" style="background:rgba(253,230,138,.1)"><span class="iconify" style="color:#fde68a" data-icon="mdi:book-open-page-variant-outline" data-width="32"></span></div>
+                    <h3 class="font-serif text-lg font-medium text-stone-200 mb-3">Baca Teks 2x</h3>
+                    <p class="text-stone-400 text-sm font-light leading-relaxed">Pertama untuk gagasan umum, kedua untuk mencari detail jawaban.</p>
+                </div>
+                <div class="card-hover p-8 rounded-3xl text-center" style="background:linear-gradient(to bottom,rgba(28,25,23,.5),transparent);border:1px solid rgba(41,37,36,.3)">
+                    <div class="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center" style="background:rgba(253,230,138,.1)"><span class="iconify" style="color:#fde68a" data-icon="mdi:target" data-width="32"></span></div>
+                    <h3 class="font-serif text-lg font-medium text-stone-200 mb-3">Baca Soal Dulu</h3>
+                    <p class="text-stone-400 text-sm font-light leading-relaxed">Baca pertanyaan sebelum membaca teks agar fokus mencari informasi relevan.</p>
+                </div>
+                <div class="card-hover p-8 rounded-3xl text-center" style="background:linear-gradient(to bottom,rgba(28,25,23,.5),transparent);border:1px solid rgba(41,37,36,.3)">
+                    <div class="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center" style="background:rgba(253,230,138,.1)"><span class="iconify" style="color:#fde68a" data-icon="mdi:close-circle-outline" data-width="32"></span></div>
+                    <h3 class="font-serif text-lg font-medium text-stone-200 mb-3">Eliminasi Pilihan</h3>
+                    <p class="text-stone-400 text-sm font-light leading-relaxed">Hapus opsi yang jelas salah. Mempersempit pilihan meningkatkan peluang benar.</p>
+                </div>
+                <div class="card-hover p-8 rounded-3xl text-center" style="background:linear-gradient(to bottom,rgba(28,25,23,.5),transparent);border:1px solid rgba(41,37,36,.3)">
+                    <div class="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center" style="background:rgba(253,230,138,.1)"><span class="iconify" style="color:#fde68a" data-icon="mdi:format-bold" data-width="32"></span></div>
+                    <h3 class="font-serif text-lg font-medium text-stone-200 mb-3">Perhatikan Kata Kunci</h3>
+                    <p class="text-stone-400 text-sm font-light leading-relaxed">Fokus pada "kecuali", "bukan", "selain", "yang tidak" agar tak tertukar makna.</p>
+                </div>
+                <div class="card-hover p-8 rounded-3xl text-center" style="background:linear-gradient(to bottom,rgba(28,25,23,.5),transparent);border:1px solid rgba(41,37,36,.3)">
+                    <div class="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center" style="background:rgba(253,230,138,.1)"><span class="iconify" style="color:#fde68a" data-icon="mdi:pencil-outline" data-width="32"></span></div>
+                    <h3 class="font-serif text-lg font-medium text-stone-200 mb-3">Latihan Menulis</h3>
+                    <p class="text-stone-400 text-sm font-light leading-relaxed">Keterampilan menulis hanya bisa diasah dengan praktik rutin menulis paragraf dan karangan.</p>
+                </div>
+                <div class="card-hover p-8 rounded-3xl text-center" style="background:linear-gradient(to bottom,rgba(28,25,23,.5),transparent);border:1px solid rgba(41,37,36,.3)">
+                    <div class="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center" style="background:rgba(253,230,138,.1)"><span class="iconify" style="color:#fde68a" data-icon="mdi:timer-sand" data-width="32"></span></div>
+                    <h3 class="font-serif text-lg font-medium text-stone-200 mb-3">Manajemen Waktu</h3>
+                    <p class="text-stone-400 text-sm font-light leading-relaxed">Alokasikan waktu per soal. Jangan terlalu lama di soal sulit, lanjutkan dulu.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-24 md:py-32">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-6" style="background:rgba(41,37,36,.5);color:#a8a29e;border:1px solid rgba(41,37,36,.5)">Pertanyaan</span>
+                <h2 class="font-serif text-4xl md:text-5xl font-light tracking-tight text-stone-200 mb-4">FAQ</h2>
+                <p class="text-stone-400 font-light">Pertanyaan yang sering diajukan siswa.</p>
+            </div>
+            <div class="space-y-3" id="faqList"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-16 border-t" style="border-color:rgba(41,37,36,.3)">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-9 h-9 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#fde68a,#fcd34d)"><span class="text-stone-900 font-serif font-semibold text-lg">B</span></div>
+                        <span class="font-serif text-xl font-medium text-stone-200">BIndo<span class="text-amber-200">SMA</span></span>
+                    </div>
+                    <p class="text-stone-500 text-sm font-light leading-relaxed max-w-md">Portal belajar Bahasa Indonesia SMA gratis dan interaktif. Dirancang untuk membantu siswa memahami materi dengan mudah dan menyenangkan.</p>
+                </div>
+                <div>
+                    <h4 class="text-stone-200 font-medium text-sm mb-4">Navigasi</h4>
+                    <div class="space-y-2">
+                        <a href="#materi" class="block text-stone-500 text-sm hover:text-stone-200 transition-colors">Materi</a>
+                        <a href="#kuis" class="block text-stone-500 text-sm hover:text-stone-200 transition-colors">Kuis</a>
+                        <a href="#ringkasan" class="block text-stone-500 text-sm hover:text-stone-200 transition-colors">Ringkasan</a>
+                        <a href="#tips" class="block text-stone-500 text-sm hover:text-stone-200 transition-colors">Tips</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-stone-200 font-medium text-sm mb-4">Kelas</h4>
+                    <div class="space-y-2">
+                        <a href="#" onclick="swKelasDirect('x')" class="block text-stone-500 text-sm hover:text-stone-200 transition-colors">Kelas X</a>
+                        <a href="#" onclick="swKelasDirect('xi')" class="block text-stone-500 text-sm hover:text-stone-200 transition-colors">Kelas XI</a>
+                        <a href="#" onclick="swKelasDirect('xii')" class="block text-stone-500 text-sm hover:text-stone-200 transition-colors">Kelas XII</a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4" style="border-color:rgba(41,37,36,.3)">
+                <p class="text-stone-600 text-xs">&copy; 2025 BIndoSMA. Dibuat untuk siswa Indonesia.</p>
+                <div class="flex items-center gap-1 text-stone-600 text-xs">Dibuat dengan <span class="iconify text-red-400 mx-1" data-icon="mdi:heart" data-width="14"></span> untuk pendidikan</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="mModal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+        <div class="fixed inset-0 flex items-center justify-center p-6">
+            <div class="modal-content w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-3xl p-8" style="background:#1c1917;border:1px solid rgba(41,37,36,.5)">
+                <div class="flex items-start justify-between mb-6">
+                    <div><span class="text-amber-200/60 text-xs font-medium uppercase tracking-widest" id="mLabel"></span><h3 class="font-serif text-2xl font-medium text-stone-200 mt-1" id="mTitle"></h3></div>
+                    <button onclick="closeModal()" class="text-stone-500 hover:text-stone-200 transition-colors"><span class="iconify" data-icon="mdi:close" data-width="24"></span></button>
+                </div>
+                <div id="mBody" class="text-stone-400 text-sm font-light leading-relaxed space-y-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast px-6 py-3 rounded-xl flex items-center gap-3" style="background:#1c1917;border:1px solid rgba(41,37,36,.5)">
+        <span class="iconify" id="tIcon" style="color:#22c55e" data-icon="mdi:check-circle" data-width="20"></span>
+        <span class="text-stone-200 text-sm" id="tText"></span>
+    </div>
+
+    <script>
+    // ===== DATA =====
+    const M={
+        'teks-prosedur':{k:'x',t:'Teks Prosedur',i:'mdi:format-list-numbered',d:'Memahami struktur, ciri kebahasaan, dan cara menulis teks prosedur yang benar.',tm:'45 menit',b:'<p><strong class="text-stone-300">Pengertian:</strong> Teks yang berisi langkah-langkah untuk melakukan atau membuat sesuatu secara tertib.</p><p><strong class="text-stone-300">Struktur:</strong></p><ul class="list-disc pl-5 space-y-1"><li><strong class="text-stone-300">Tujuan</strong> — menjelaskan maksud teks</li><li><strong class="text-stone-300">Material dan alat</strong> — bahan yang dibutuhkan</li><li><strong class="text-stone-300">Langkah-langkah</strong> — urutan kegiatan (KTP: kemudian, lalu, selanjutnya)</li><li><strong class="text-stone-300">Penutup</strong> — kesimpulan atau hasil akhir</li></ul><p><strong class="text-stone-300">Ciri kebahasaan:</strong> kalimat imperatif, konjungsi temporal, kata kerja material.</p><p><strong class="text-stone-300">Contoh:</strong> "Cara Membuat Nasi Goreng — Tujuan: membuat nasi goreng sederhana. Bahan: nasi, telur, bawang merah, kecap. Langkah: Pertama, panaskan minyak. Kemudian, tumis bawang merah..."</p>'},
+        'teks-deskripsi':{k:'x',t:'Teks Deskripsi',i:'mdi:image-filter-hdr',d:'Menggambarkan objek, tempat, atau orang dengan kata-kata detail dan tepat.',tm:'40 menit',b:'<p><strong class="text-stone-300">Pengertian:</strong> Teks yang menggambarkan objek secara spesifik sehingga pembaca seolah melihat sendiri.</p><p><strong class="text-stone-300">Struktur:</strong> Identifikasi → Deskripsi bagian.</p><p><strong class="text-stone-300">Ciri kebahasaan:</strong> kata sifat detail, majas personifikasi & metafora, kalimat nominal, kata keterangan tempat & waktu.</p>'},
+        'teks-cerita':{k:'x',t:'Teks Cerita Fantasi',i:'mdi:book-open-variant',d:'Menganalisis unsur intrinsik cerita fantasi dan membuat cerita imajinatif.',tm:'50 menit',b:'<p><strong class="text-stone-300">Ciri-ciri:</strong> mengandung unsur keajaiban/supernatural, latar imajinatif, tokoh bisa makhluk gaib, alur bisa maju atau campuran.</p><p><strong class="text-stone-300">Unsur wajib:</strong> konflik, penyelesaian konflik, pesan moral (amanat).</p>'},
+        'teks-observasi':{k:'x',t:'Teks Hasil Observasi',i:'mdi:magnify',d:'Menyusun laporan hasil pengamatan dengan struktur dan bahasa yang tepat.',tm:'45 menit',b:'<p><strong class="text-stone-300">Struktur:</strong> Pernyataan umum → Deskripsi bagian → Deskripsi benefit (opsional).</p><p><strong class="text-stone-300">Ciri kebahasaan:</strong> bahasa faktual, kata benda teknis, kalimat declaratif, istilah ilmiah.</p>'},
+        'teks-anekdot':{k:'x',t:'Teks Anekdot',i:'mdi:emoticon-lol-outline',d:'Memahami teks yang mengandung kritik melalui cerita lucu dan menyindir.',tm:'35 menit',b:'<p><strong class="text-stone-300">Struktur:</strong> Abstraksi → Orientasi → Krisis → Reaksi → Koda.</p><p><strong class="text-stone-300">Ciri:</strong> bersifat humoris, mengandung kritik sosial, bersifat naratif.</p>'},
+        'unsur-puisi':{k:'x',t:'Unsur-Unsur Puisi',i:'mdi:feather',d:'Mengidentifikasi makna kata, majas, rima, dan tema dalam puisi.',tm:'40 menit',b:'<p><strong class="text-stone-300">Unsur fisik:</strong> diksi, imaji, figur bahasa/majas, bunyi (rima, ritme, aliterasi, asonansi), tipografi.</p><p><strong class="text-stone-300">Unsur batin:</strong> tema, nada/suasana, amanat, perasaan.</p>'},
+        'teks-eksplanasi':{k:'xi',t:'Teks Eksplanasi',i:'mdi:lightbulb-on-outline',d:'Menjelaskan proses terjadinya fenomena alam atau sosial secara sistematis.',tm:'50 menit',b:'<p><strong class="text-stone-300">Struktur:</strong> Pernyataan umum → Deretan penjelas → Interpretasi.</p><p><strong class="text-stone-300">Ciri kebahasaan:</strong> konjungsi kausalitas (karena, sehingga), kalimat pasif, kata benda abstrak, bahasa faktual.</p><p><strong class="text-stone-300">Contoh topik:</strong> terjadinya hujan, banjir, gempa bumi, perubahan iklim.</p>'},
+        'teks-persuasi':{k:'xi',t:'Teks Persuasi',i:'mdi:bullhorn-outline',d:'Meyakinkan pembaca untuk melakukan sesuatu melalui argumen yang kuat.',tm:'40 menit',b:'<p><strong class="text-stone-300">Struktur:</strong> Pengenalan isu → Rangkaian argumen → Ajakan.</p><p><strong class="text-stone-300">Ciri kebahasaan:</strong> kata ajakan (mari, hendaknya), kalimat persuasif, data/fakta, kata modalitas (harus, sebaiknya).</p>'},
+        'cerpen':{k:'xi',t:'Analisis Cerpen',i:'mdi:book-heart-outline',d:'Menganalisis unsur intrinsik & ekstrinsik cerpen: tema, tokoh, alur, sudut pandang.',tm:'60 menit',b:'<p><strong class="text-stone-300">Unsur intrinsik:</strong> tema, alur (maju/mundur/campuran), tokoh & penokohan (analitik/dramatik), sudut pandang (orang pertama/ketiga terbatas/serba tahu), latar, amanat.</p><p><strong class="text-stone-300">Unsur ekstrinsik:</strong> latar belakang pengarang, nilai sosial/budaya/religius, kondisi masyarakat.</p>'},
+        'teks-prosedur-kompleks':{k:'xi',t:'Teks Prosedur Kompleks',i:'mdi:sitemap-outline',d:'Menyusun langkah-langkah kompleks dengan penjelasan yang mendetail.',tm:'50 menit',b:'<p><strong class="text-stone-300">Perbedaan dari sederhana:</strong> memiliki sub-langkah detail, syarat tertentu, bisa bersifat hierarkis.</p><p><strong class="text-stone-300">Struktur tambahan:</strong> Syarat, Peringatan, Sub-langkah.</p><p><strong class="text-stone-300">Contoh:</strong> Cara mengurus SIM, cara mendaftar SNMPTN.</p>'},
+        'novel':{k:'xi',t:'Resensi Novel',i:'mdi:book-multiple-outline',d:'Menulis resensi novel yang mencakup kelebihan, kekurangan, dan sinopsis.',tm:'55 menit',b:'<p><strong class="text-stone-300">Sistematika:</strong> Identitas buku (judul, pengarang, penerbit, tahun, tebal, ISBN) → Sinopsis → Analisis → Kelebihan → Kekurangan → Kesimpulan.</p>'},
+        'drama':{k:'xi',t:'Teks Drama',i:'mdi:drama-masks',d:'Menganalisis dialog, prolog, epilog, dan unsur penting dalam naskah drama.',tm:'45 menit',b:'<p><strong class="text-stone-300">Unsur:</strong> prolog, dialog, epilog, stage direction (petunjuk teknis), babak.</p><p><strong class="text-stone-300">Jenis:</strong> tragedi, komedi, tragedi-komedi, melodrama.</p>'},
+        'teks-ulasan':{k:'xii',t:'Teks Ulasan',i:'mdi:star-outline',d:'Menulis ulasan kritis terhadap karya sastra, film, atau buku secara objektif.',tm:'50 menit',b:'<p><strong class="text-stone-300">Struktur:</strong> Identitas karya → Sinopsis → Analisis → Evaluasi.</p><p><strong class="text-stone-300">Perbedaan resensi & ulasan:</strong> Resensi lebih formal, ulasan lebih fleksibel. Keduanya bersifat objektif dan faktual.</p>'},
+        'teks-diskusi':{k:'xii',t:'Teks Diskusi',i:'mdi:forum-outline',d:'Menyusun teks yang memuat pro dan kontra atas suatu permasalahan.',tm:'45 menit',b:'<p><strong class="text-stone-300">Struktur:</strong> Pendahuluan → Pendapat pro → Pendapat kontra → Kesimpulan.</p><p><strong class="text-stone-300">Ciri kebahasaan:</strong> konjungsi opposing (namun, tetapi), supporting (selain itu, tambahan pula), bahasa netral.</p>'},
+        'kalimat-efektif':{k:'xii',t:'Kalimat Efektif',i:'mdi:pencil-ruler',d:'Menguasai syarat kalimat efektif: ejaan, ketegasan, kelogisan, dan kehematan.',tm:'40 menit',b:'<p><strong class="text-stone-300">5 Syarat:</strong></p><ul class="list-disc pl-5 space-y-1"><li><strong class="text-stone-300">Kelogisan</strong> — hubungan antarunsur masuk akal</li><li><strong class="text-stone-300">Ketegasan</strong> — tidak menimbulkan penafsiran ganda (ambigu)</li><li><strong class="text-stone-300">Kehematan</strong> — tidak ada redundansi</li><li><strong class="text-stone-300">Keparalelan</strong> — bentuk sejajar antarunsur</li><li><strong class="text-stone-300">Ketepatan ejaan</strong> — sesuai PUEBI</li></ul><p><strong class="text-stone-300">Contoh:</strong> "Dia pergi ke ke pasar" (redundan) → "Dia pergi ke pasar membeli sayur".</p>'},
+        'paragraf':{k:'xii',t:'Jenis Paragraf',i:'mdi:text-box-outline',d:'Membedakan paragraf deduktif, induktif, campuran, dan perbandingan.',tm:'35 menit',b:'<p><strong class="text-stone-300">Berdasarkan kalimat utama:</strong> deduktif (awal), induktif (akhir), campuran (awal & akhir).</p><p><strong class="text-stone-300">Berdasarkan isi:</strong> perbandingan, sebab-akibat, persuasif, deskripsi, narasi.</p>'},
+        'majas':{k:'xii',t:'Majas & Gaya Bahasa',i:'mdi:palette-outline',d:'Mengenali 20+ jenis majas: metafora, personifikasi, hiperbola, litotes, dan lainnya.',tm:'50 menit',b:'<p><strong class="text-stone-300">Perbandingan:</strong> metafora, simile, personifikasi, alegori, parabel.</p><p><strong class="text-stone-300">Pertentangan:</strong> ironi, sinisme, sarkasme, litotes, antitesis, paradoks, oksimoron.</p><p><strong class="text-stone-300">Penegasan:</strong> hiperbola, repetisi, tautologi, pleonasme, retoris.</p><p><strong class="text-stone-300">Contoh:</strong><br>• Metafora: "Wajahnya bulan purnama"<br>• Hiperbola: "Dia menangis mengalirkan lautan air mata"<br>• Litotes: "Tak apa-apalah rumah sederhana ini"<br>• Oksimoron: "Kota mati yang ramai"</p>'},
+        'persiapan-ujian':{k:'xii',t:'Persiapan Ujian',i:'mdi:school-outline',d:'Strategi mengerjakan soal UTBK/SNMPTN dan ujian semester Bahasa Indonesia.',tm:'60 menit',b:'<p><strong class="text-stone-300">Strategi:</strong></p><ul class="list-disc pl-5 space-y-1"><li>Pahami jenis soal: membaca teks, gagasan utama, makna kata, majas, kalimat efektif, EYD</li><li>Latihan soal tahun sebelumnya minimal 3x seminggu</li><li>Buat jurnal kesalahan dan pelajari konsep yang belum dipahami</li><li>Perbanyak baca koran, artikel ilmiah, cerpen</li><li>Hafal PUEBI: huruf kapital, tanda baca, penulisan kata</li></ul><p><strong class="text-stone-300">Alokasi waktu:</strong> 90 detik per soal. Lewati soal sulit, kembali nanti.</p>'}
+    };
+
+    const Q={
+        prosedur:{t:'Teks Prosedur',q:[
+            {q:'Berikut yang BUKAN merupakan struktur teks prosedur adalah...',o:['Tujuan','Material dan alat','Plot twist','Langkah-langkah','Penutup'],a:2},
+            {q:'Kata "kemudian", "selanjutnya", "lalu" dalam teks prosedur termasuk konjungsi...',o:['Kausalitas','Temporal','Adversatif','Additif','Kondisional'],a:1},
+            {q:'Kalimat imperatif dalam teks prosedur berfungsi untuk...',o:['Menggambarkan objek','Memberikan perintah atau langkah','Menyatakan pendapat','Mengajukan pertanyaan','Menghibur pembaca'],a:1},
+            {q:'Contoh teks prosedur yang tepat adalah...',o:['Cerita tentang hujan','Cara membuat teh manis','Deskripsi pantai','Ulasan film','Puisi tentang cinta'],a:1},
+            {q:'Bagian teks prosedur yang menjelaskan bahan-bahan yang diperlukan disebut...',o:['Tujuan','Langkah-langkah','Material dan alat','Penutup','Evaluasi'],a:2}
+        ]},
+        cerpen:{t:'Analisis Cerpen',q:[
+            {q:'Sudut pandang "aku melihat dia berlari" termasuk sudut pandang...',o:['Orang ketiga serba tahu','Orang ketiga terbatas','Orang pertama','Orang kedua','Orang ketiga objektif'],a:2},
+            {q:'Tokoh yang berperan menentang tokoh utama disebut...',o:['Protagonis','Tritagonis','Antagonis','Figuran','Kameo'],a:2},
+            {q:'Alur yang menceritakan kejadian kronologis dari awal hingga akhir disebut alur...',o:['Mundur','Campuran','Mengalung','Maju','Paralel'],a:3},
+            {q:'Berikut yang termasuk unsur ekstrinsik cerpen adalah...',o:['Tema','Alur','Latar belakang pengarang','Tokoh','Latar'],a:2},
+            {q:'Penokohan yang mendeskripsikan sifat tokoh secara langsung disebut...',o:['Dramatik','Indirek','Analitik','Implicit','Dialogis'],a:2}
+        ]},
+        majas:{t:'Majas & Gaya Bahasa',q:[
+            {q:'"Giginya bagai deretan mutiara" merupakan majas...',o:['Metafora','Personifikasi','Simile','Hiperbola','Litotes'],a:2},
+            {q:'"Angin berbisikan kata-kata cinta" merupakan majas...',o:['Metafora','Personifikasi','Litotes','Ironi','Hiperbola'],a:1},
+            {q:'"Tak apa-apalah rumah hina ini" merupakan majas...',o:['Hiperbola','Ironi','Litotes','Sarkasme','Metafora'],a:2},
+            {q:'Majas yang menyatakan sesuatu secara berlebihan disebut...',o:['Litotes','Ironi','Hiperbola','Metafora','Simile'],a:2},
+            {q:'"Kota mati yang ramai" merupakan contoh majas...',o:['Paradoks','Oksimoron','Antitesis','Ironi','Hiperbola'],a:1}
+        ]},
+        kalimat:{t:'Kalimat Efektif',q:[
+            {q:'Kalimat yang mengandung pengulangan tidak perlu melanggar syarat...',o:['Kelogisan','Ketegasan','Kehematan','Keparalelan','Ketepatan ejaan'],a:2},
+            {q:'"Ibu guru pergi ke ke pasar" tidak efektif karena...',o:['Tidak logis','Redundan','Ambigu','Tidak paralel','Salah eja'],a:1},
+            {q:'Syarat kalimat efektif yang berarti tidak menimbulkan penafsiran ganda adalah...',o:['Kelogisan','Ketegasan','Kehematan','Ketepatan ejaan','Keparalelan'],a:1},
+            {q:'"Dia suka membaca dan tulisan" melanggar syarat...',o:['Kelogisan','Ketegasan','Kehematan','Keparalelan','Ketepatan ejaan'],a:3},
+            {q:'Berikut kalimat efektif yang benar adalah...',o:['Dia pergi pergi ke sekolah','Mereka makan makan bersama','Ibu membeli buah di pasar','Saya akan pergi ke ke rumah','Ayah pergi ke ke kantor'],a:2}
+        ]},
+        paragraf:{t:'Jenis Paragraf',q:[
+            {q:'Paragraf yang kalimat utamanya berada di awal disebut paragraf...',o:['Induktif','Deduktif','Campuran','Deskripsi','Narasi'],a:1},
+            {q:'Paragraf yang kalimat utamanya berada di akhir disebut paragraf...',o:['Deduktif','Campuran','Induktif','Perbandingan','Sebab-akibat'],a:2},
+            {q:'Paragraf yang membandingkan dua hal berbeda disebut paragraf...',o:['Sebab-akibat','Persuasif','Perbandingan','Narasi','Deduktif'],a:2},
+            {q:'Jika kalimat utama ada di awal dan di akhir, itu termasuk paragraf...',o:['Deduktif','Induktif','Campuran','Deskripsi','Narasi'],a:2},
+            {q:'Paragraf yang menjelaskan hubungan sebab dan akibat disebut...',o:['Narasi','Deskripsi','Perbandingan','Sebab-akibat','Persuasif'],a:3}
+        ]}
+    };
+
+    const FAQ=[
+        {q:'Apa perbedaan teks prosedur sederhana dan kompleks?',a:'Teks prosedur sederhana hanya berisi langkah-langkah sederhana (misal: cara membuat nasi goreng), sedangkan teks prosedur kompleks memiliki sub-langkah dan penjelasan tambahan di setiap tahapannya (misal: cara mengurus SIM). Teks prosedur kompleks juga bisa memiliki syarat dan peringatan.'},
+        {q:'Bagaimana cara membedakan ironi, sinisme, dan sarkasme?',a:'<strong class="text-stone-300">Ironi</strong> menyatakan sesuatu yang berlawanan dengan kenyataan (contoh: "Bagus sekali nilai mu, hampir sempurna kalau bukan nol"). <strong class="text-stone-300">Sinisme</strong> sindiran halus namun menyakitkan. <strong class="text-stone-300">Sarkasme</strong> sindiran paling tajam, kasar, dan langsung menyakiti perasaan.'},
+        {q:'Apa saja yang termasuk unsur ekstrinsik cerpen?',a:'Unsur ekstrinsik adalah unsur di luar karya sastra: <strong class="text-stone-300">latar belakang pengarang</strong> (kehidupan, pandangan), <strong class="text-stone-300">nilai-nilai</strong> (moral, sosial, budaya, religius), <strong class="text-stone-300">latar belakang masyarakat</strong>, dan <strong class="text-stone-300">situasi politik/hukum</strong> saat karya dibuat.'},
+        {q:'Bagaimana cara menentukan jenis paragraf?',a:'<strong class="text-stone-300">Deduktif:</strong> kalimat utama di awal. <strong class="text-stone-300">Induktif:</strong> kalimat utama di akhir. <strong class="text-stone-300">Campuran:</strong> kalimat utama di awal dan akhir. <strong class="text-stone-300">Perbandingan:</strong> membandingkan dua hal. <strong class="text-stone-300">Sebab-akibat:</strong> menjelaskan hubungan kausal.'},
+        {q:'Apa perbedaan metafora dan simile?',a:'<strong class="text-stone-300">Metafora</strong> membandingkan langsung tanpa kata pembanding ("Ia adalah singa di medan perang"). <strong class="text-stone-300">Simile</strong> menggunakan kata pembanding seperti "bagai", "seperti", "laksana" ("Giginya bagai deretan mutiara"). Keduanya majas perbandingan, bedanya di kata penghubung.'}
+    ];
+
+    const LT=['A','B','C','D','E'];
+    const QT=['prosedur','cerpen','majas','kalimat','paragraf'];
+    let cQ='prosedur',cN=0,sc=0,ans=false;
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded',()=>{
+        buildMateri();
+        buildFAQ();
+        buildTopicBtns();
+        renderQ();
+    });
+
+    // ===== MATERI CARDS =====
+    function buildMateri(){
+        ['x','xi','xii'].forEach(k=>{
+            const g=document.getElementById('grid-'+k);
+            Object.entries(M).filter(([,v])=>v.k===k).forEach(([key,v])=>{
+                g.innerHTML+=`<div class="materi-card p-8 rounded-3xl cursor-pointer" style="background:linear-gradient(to bottom,rgba(28,25,23,.5),transparent);border:1px solid rgba(41,37,36,.3)" onclick="openModal('${key}')">
+                    <div class="materi-icon w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-all duration-300" style="background:rgba(41,37,36,.5);color:#a8a29e"><span class="iconify" data-icon="${v.i}" data-width="28"></span></div>
+                    <h3 class="materi-title font-serif text-xl font-medium text-stone-200 mb-3 transition-colors duration-300">${v.t}</h3>
+                    <p class="text-stone-400 text-sm font-light leading-relaxed">${v.d}</p>
+                    <div class="flex items-center gap-2 mt-5 text-stone-500 text-xs"><span class="iconify" data-icon="mdi:clock-outline" data-width="14"></span><span>${v.tm}</span></div>
+                </div>`;
+            });
+        });
+    }
+
+    // ===== FAQ =====
+    function buildFAQ(){
+        const el=document.getElementById('faqList');
+        FAQ.forEach((f,i)=>{
+            el.innerHTML+=`<div class="rounded-2xl overflow-hidden" style="background:linear-gradient(to bottom,rgba(28,25,23,.5),transparent);border:1px solid rgba(41,37,36,.3)">
+                <button onclick="togFaq(this)" class="w-full flex items-center justify-between p-6 text-left">
+                    <span class="text-stone-200 font-medium text-sm pr-4">${f.q}</span>
+                    <span class="iconify shrink-0 text-stone-500 transition-transform duration-300 fa" data-icon="mdi:chevron-down" data-width="20"></span>
+                </button>
+                <div class="fqa hidden px-6 pb-6"><p class="text-stone-400 text-sm font-light leading-relaxed">${f.a}</p></div>
+            </div>`;
+        });
+    }
+    function togFaq(b){
+        const a=b.nextElementSibling,r=b.querySelector('.fa'),o=!a.classList.contains('hidden');
+        document.querySelectorAll('.fqa').forEach(x=>x.classList.add('hidden'));
+        document.querySelectorAll('.fa').forEach(x=>x.style.transform='rotate(0deg)');
+        if(!o){a.classList.remove('hidden');r.style.transform='rotate(180deg)'}
+    }
+
+    // ===== KELAS TABS =====
+    function swKelas(k,btn){
+        document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(e=>{e.classList.remove('active');e.style.borderColor='rgba(41,37,36,.5)';e.classList.add('text-stone-400')});
+        document.getElementById('kelas-'+k).classList.add('active');
+        btn.classList.add('active');btn.style.borderColor='#fde68a';btn.classList.remove('text-stone-400');
+    }
+    function swKelasDirect(k){
+        document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach((e,i)=>{
+            e.classList.remove('active');e.style.borderColor='rgba(41,37,36,.5)';e.classList.add('text-stone-400');
+            if(['x','xi','xii'][i]===k){e.classList.add('active');e.style.borderColor='#fde68a';e.classList.remove('text-stone-400')}
+        });
+        document.getElementById('kelas-'+k).classList.add('active');
+        document.getElementById('materi').scrollIntoView({behavior:'smooth'});
+    }
+
+    // ===== MODAL =====
+    function openModal(key){
+        const v=M[key];if(!v)return;
+        const labels={x:'Kelas X',xi:'Kelas XI',xii:'Kelas XII'};
+        document.getElementById('mLabel').textContent=labels[v.k];
+        document.getElementById('mTitle').textContent=v.t;
+        document.getElementById('mBody').innerHTML=v.b;
+        document.getElementById('mModal').classList.add('show');
+        document.body.style.overflow='hidden';
+    }
+    function closeModal(){
+        document.getElementById('mModal').classList.remove('show');
+        document.body.style.overflow='';
+    }
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+    // ===== QUIZ =====
+    function buildTopicBtns(){
+        const el=document.getElementById('topicBtns');
+        QT.forEach((t,i)=>{
+            el.innerHTML+=`<button onclick="loadQT('${t}',this)" class="qt-btn px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 ${i===0?'text-amber-200':'text-stone-400'}" style="background:${i===0?'rgba(253,230,138,.1)':'rgba(41,37,36,.3)'};border:1px solid ${i===0?'rgba(253,230,138,.2)':'rgba(41,37,36,.3)'}">${Q[t].t}</button>`;
+        });
+    }
+
+    function loadQT(topic,btn){
+        cQ=topic;cN=0;sc=0;ans=false;
+        document.getElementById('qBody').classList.remove('hidden');
+        document.getElementById('qResult').classList.add('hidden');
+        document.getElementById('qScore').textContent='0';
+        document.querySelectorAll('.qt-btn').forEach(b=>{b.classList.remove('text-amber-200');b.classList.add('text-stone-400');b.style.background='rgba(41,37,36,.3)';b.style.borderColor='rgba(41,37,36,.3)'});
+        if(btn){btn.classList.remove('text-stone-400');btn.classList.add('text-amber-200');btn.style.background='rgba(253,230,138,.1)';btn.style.borderColor='rgba(253,230,138,.2)'}
+        renderQ();
+    }
+
+    function renderQ(){
+        const d=Q[cQ],q=d.q[cN];
+        document.getElementById('qTitle').textContent=d.t;
+        document.getElementById('qCur').textContent=cN+1;
+        document.getElementById('qTot').textContent=d.q.length;
+        document.getElementById('qText').textContent=q.q;
+        ans=false;
+        const p=((cN+1)/d.q.length)*100;
+        document.getElementById('pBar').style.width=p+'%';
+        document.getElementById('pCircle').setAttribute('stroke-dashoffset',125.6-(125.6*(cN/d.q.length)));
+        let h='';
+        q.o.forEach((opt,i)=>{
+            h+=`<div class="quiz-option p-5 rounded-2xl flex items-center gap-4" style="border:1px solid rgba(41,37,36,.5)" onclick="selA(${i})">
+                <span class="ol w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 transition-all duration-300" style="background:rgba(41,37,36,.5);color:#a8a29e">${LT[i]}</span>
+                <span class="text-stone-300 text-sm font-light">${opt}</span>
+            </div>`;
+        });
+        document.getElementById('qOpts').innerHTML=h;
+    }
+
+    function selA(idx){
+        if(ans)return;ans=true;
+        const d=Q[cQ],cor=d.q[cN].a,opts=document.querySelectorAll('.quiz-option');
+        opts.forEach((o,i)=>{
+            if(i===cor)o.classList.add('correct');
+            if(i===idx&&i!==cor)o.classList.add('wrong');
+            if(i===idx)o.classList.add('selected');
+        });
+        if(idx===cor){sc++;document.getElementById('qScore').textContent=sc;toast('Jawaban benar! ✓','check-circle','#22c55e')}
+        else{toast('Salah. Jawaban benar: '+LT[cor],'close-circle','#ef4444')}
+        setTimeout(()=>{cN++;if(cN<d.q.length)renderQ();else showRes()},1500);
+    }
+
+    function showRes(){
+        document.getElementById('qBody').classList.add('hidden');
+        document.getElementById('qResult').classList.remove('hidden');
+        const t=Q[cQ].q.length,pct=(sc/t)*100;
+        document.getElementById('rScore').textContent=sc+'/'+t;
+        const ic=document.getElementById('rIcon'),ti=document.getElementById('rTitle'),de=document.getElementById('rDesc');
+        if(pct===100){ic.style.background='rgba(34,197,94,.1)';ic.innerHTML='<span class="iconify text-green-400" data-icon="mdi:trophy" data-width="40"></span>';ti.textContent='Sempurna!';de.textContent='Luar biasa! Kamu menguasai materi ini dengan sangat baik.'}
+        else if(pct>=60){ic.style.background='rgba(253,230,138,.1)';ic.innerHTML='<span class="iconify" style="color:#fde68a" data-icon="mdi:star-half-full" data-width="40"></span>';ti.textContent='Bagus!';de.textContent='Kamu sudah cukup memahami materi ini. Terus berlatih!'}
+        else{ic.style.background='rgba(239,68,68,.1)';ic.innerHTML='<span class="iconify text-red-400" data-icon="mdi:book-open-variant" data-width="40"></span>';ti.textContent='Perlu Belajar Lagi';de.textContent='Jangan menyerah! Baca ulang materinya dan coba lagi.'}
+        document.getElementById('pCircle').setAttribute('stroke-dashoffset','0');
+        document.getElementById('pBar').style.width='100%';
+    }
+
+    function restartQ(){cN=0;sc=0;ans=false;document.getElementById('qBody').classList.remove('hidden');document.getElementById('qResult').classList.add('hidden');document.getElementById('qScore').textContent='0';renderQ()}
+
+    function nextTopic(){
+        const ni=(QT.indexOf(cQ)+1)%QT.length,nx=QT[ni];
+        cQ=nx;cN=0;sc=0;ans=false;
+        document.getElementById('qBody').classList.remove('hidden');
+        document.getElementById('qResult').classList.add('hidden');
+        document.getElementById('qScore').textContent='0';
+        document.querySelectorAll('.qt-btn').forEach(b=>{
+            b.classList.remove('text-amber-200');b.classList.add('text-stone-400');b.style.background='rgba(41,37,36,.3)';b.style.borderColor='rgba(41,37,36,.3)';
+            if(b.textContent.trim()===Q[nx].t){b.classList.remove('text-stone-400');b.classList.add('text-amber-200');b.style.background='rgba(253,230,138,.1)';b.style.borderColor='rgba(253,230,138,.2)'}
+        });
+        renderQ();
+    }
+
+    // ===== TOAST =====
+    function toast(txt,icon,color){
+        const t=document.getElementById('toast');
+        document.getElementById('tText').textContent=txt;
+        document.getElementById('tIcon').setAttribute('data-icon','mdi:'+icon);
+        document.getElementById('tIcon').style.color=color;
+        t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);
+    }
+    </script>
+</body>
+</html>
